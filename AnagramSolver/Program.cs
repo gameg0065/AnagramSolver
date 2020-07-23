@@ -2,7 +2,8 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
-using AnagramSolverTest.Console;
+using AnagramSolver.Consoleno;
+using AnagramSolver.BusinessLogic;
 
 namespace AnagramSolver
 {
@@ -10,8 +11,8 @@ namespace AnagramSolver
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"The parameters are: {GetParameters()}");
-            Console.WriteLine(GetUserInput.GetName());
+            // DictionaryManager.loadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
+            DictionaryManager.IterateThruDictionary();
         }
         private static string GetParameters()
         {

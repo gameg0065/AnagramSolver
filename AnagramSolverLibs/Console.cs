@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AnagramSolverTest.Console
+namespace AnagramSolver.Consoleno
 {
     public static class GetUserInput
     {
