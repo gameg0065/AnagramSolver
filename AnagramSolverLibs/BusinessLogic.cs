@@ -7,35 +7,36 @@ namespace AnagramSolver.BusinessLogic
 {
     public static class DictionaryManager
     {
-
+        public static Dictionary<string, Element> elements = new Dictionary<string, Element>();
         private static Dictionary<string, Element> LoadDictionary() {
-            var elements = new Dictionary<string, Element>();
-            try
-            {
-                using (StreamReader sr = new StreamReader("./resources/zodynas.txt"))
+            if(elements.Count == 0) {
+                try
                 {
-                    string line, lastWord = "";
-                    while ((line = sr.ReadLine()) != null)
+                    using (StreamReader sr = new StreamReader("./resources/zodynas.txt"))
                     {
-                        string[] words = line.Split('\t');
-                        if (lastWord != words[0]) {
-                            AddToDictionary(elements, words[0], words[1]);
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            string[] words = line.Split('\t');
+                            if (!elements.ContainsKey(words[0]))
+                            {
+                                AddToDictionary(elements, words[0], words[1]);
+                            }
                         }
-                        lastWord = words[0];
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
+                catch (Exception e)
+                {
+                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine(e.Message);
+                }
             }
             return elements;
         }
 
         public static void IterateThruDictionary()
         {
-            Dictionary<string, Element> elements = LoadDictionary();
+            LoadDictionary();
 
             foreach (KeyValuePair<string, Element> kvp in elements)
             {

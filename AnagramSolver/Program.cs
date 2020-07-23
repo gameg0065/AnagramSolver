@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using AnagramSolver.Consoleno;
 using AnagramSolver.BusinessLogic;
+using AnagramSolver.Contracts;
 
 namespace AnagramSolver
 {
@@ -13,6 +14,18 @@ namespace AnagramSolver
         {
             // DictionaryManager.loadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
             DictionaryManager.IterateThruDictionary();
+            string symbol = "Tomas" ;
+            if (DictionaryManager.elements.ContainsKey(symbol) == false)
+            {
+                Console.WriteLine(symbol + " not found");
+            }
+            else
+            {
+                Element theElement = DictionaryManager.elements[symbol];
+                Console.WriteLine("found: " + theElement.Word);
+            }
+            var test =  Console.ReadLine();
+
         }
         private static string GetParameters()
         {
