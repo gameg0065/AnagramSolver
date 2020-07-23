@@ -2,16 +2,19 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
-using AnagramSolverTest.Console;
+using AnagramSolver.MyConsole;
+using AnagramSolver.BusinessLogic;
+using AnagramSolver.Contracts;
 
 namespace AnagramSolver
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine($"The parameters are: {GetParameters()}");
+        static void Main(string[] args) {
+            DictionaryManager.LoadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
             Console.WriteLine(GetUserInput.GetName());
+            // Console.WriteLine(DictionaryManager.CheckIfExists("Jonas"));
+
         }
         private static string GetParameters()
         {
