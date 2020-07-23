@@ -1,14 +1,13 @@
 ﻿using System;
 
-namespace AnagramSolver.Consoleno
+namespace AnagramSolver.MyConsole
 {
     public static class GetUserInput
     {
         public static string GetName()
         {
-            System.Console.WriteLine("Input your name: ");
-            string name = System.Console.ReadLine();
-
+            Console.WriteLine("Enter the word to generate anagram");
+            string name = Console.ReadLine();
             return name;
         } 
     }

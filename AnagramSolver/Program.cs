@@ -2,7 +2,7 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
-using AnagramSolver.Consoleno;
+using AnagramSolver.MyConsole;
 using AnagramSolver.BusinessLogic;
 using AnagramSolver.Contracts;
 
@@ -10,21 +10,10 @@ namespace AnagramSolver
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            // DictionaryManager.loadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
-            DictionaryManager.IterateThruDictionary();
-            string symbol = "Tomas" ;
-            if (DictionaryManager.elements.ContainsKey(symbol) == false)
-            {
-                Console.WriteLine(symbol + " not found");
-            }
-            else
-            {
-                Element theElement = DictionaryManager.elements[symbol];
-                Console.WriteLine("found: " + theElement.Word);
-            }
-            var test =  Console.ReadLine();
+        static void Main(string[] args) {
+            DictionaryManager.LoadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
+            Console.WriteLine(GetUserInput.GetName());
+            // Console.WriteLine(DictionaryManager.CheckIfExists("Jonas"));
 
         }
         private static string GetParameters()
