@@ -12,9 +12,7 @@ namespace AnagramSolver
     {
         static void Main(string[] args) {
             DictionaryManager.LoadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
-            Console.WriteLine(GetUserInput.GetName());
-            // Console.WriteLine(DictionaryManager.CheckIfExists("Jonas"));
-
+            AnagramGenerator.GenerateAnagrams(GetUserInput.GetName());
         }
         private static string GetParameters()
         {

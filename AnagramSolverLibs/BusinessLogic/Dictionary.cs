@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using AnagramSolver.Contracts;
+using System.Linq;
 
 namespace AnagramSolver.BusinessLogic
 {
