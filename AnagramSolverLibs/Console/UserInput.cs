@@ -4,11 +4,16 @@ namespace AnagramSolver.MyConsole
 {
     public static class GetUserInput
     {
-        public static string GetName()
+        public static string GetWord(int minLength)
         {
             Console.WriteLine("Enter the word to generate anagram");
-            string name = Console.ReadLine();
-            return name;
+            string word = Console.ReadLine();
+            while (word.Length < minLength)
+            {
+                Console.Write("This is not valid input. Please enter an valid word: ");
+                word = Console.ReadLine();
+            }
+            return word;
         } 
     }
 }

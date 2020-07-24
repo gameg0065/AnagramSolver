@@ -16,7 +16,7 @@ namespace AnagramSolver
             int inputLength = Int32.Parse(builder.Build().GetSection("Settings").GetSection("MinimumLengthOfInput").Value);
             int anagramNumber = Int32.Parse(builder.Build().GetSection("Settings").GetSection("NumberOfAnagramsGenerated").Value);
             string userInput = GetUserInput.GetWord(inputLength);
-            Console.WriteLine(AnagramGenerator.GenerateAnagrams(userInput, anagramNumber));
+            Output.PrintGeneratedAnagrams(AnagramGenerator.GenerateAnagrams(userInput, anagramNumber));
         }
     }
 }
