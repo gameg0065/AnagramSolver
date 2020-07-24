@@ -4,25 +4,23 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using AnagramSolver.MyConsole;
 using AnagramSolver.BusinessLogic;
-using AnagramSolver.Contracts;
 
 namespace AnagramSolver
 {
     class Program
     {
         static void Main(string[] args) {
-            DictionaryManager.LoadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
-            Console.WriteLine(GetUserInput.GetName());
-            // Console.WriteLine(DictionaryManager.CheckIfExists("Jonas"));
-
+            StartApp();
         }
-        private static string GetParameters()
-        {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(ConfigurationManager.AppSettings["Path"], optional: true, reloadOnChange: true);
-            var val1 = builder.Build().GetSection("Settings").GetSection("NumberOfAnagramsGenerated").Value;
-            var val2 = builder.Build().GetSection("Settings").GetSection("MinimumLengthOfInput").Value;
 
-            return $"The values of parameters are: {val1} and {val2}";
+        private static void StartApp() {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(ConfigurationManager.AppSettings["Path"], optional: true, reloadOnChange: true);
+            int inputLength = Int32.Parse(builder.Build().GetSection("Settings").GetSection("MinimumLengthOfInput").Value);
+            int anagramNumber = Int32.Parse(builder.Build().GetSection("Settings").GetSection("NumberOfAnagramsGenerated").Value);
+            DictionaryManager myDictionaryManager = new DictionaryManager();
+            myDictionaryManager.LoadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
+            GetUserInput theGetUserInput = new GetUserInput();
+            theGetUserInput.AskForUserInput(inputLength, anagramNumber);
         }
     }
 }

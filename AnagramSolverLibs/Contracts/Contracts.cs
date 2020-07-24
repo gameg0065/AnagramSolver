@@ -1,9 +1,7 @@
-﻿using System;
-
-
+﻿
 namespace AnagramSolver.Contracts
 {
-    public class Element
+    public class DictionaryEntry
     {
         public string Word { get; set; }
         public string Antecedent { get; set; }
