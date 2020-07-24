@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using AnagramSolver.Contracts;
 
 namespace AnagramSolver.MyConsole
 {
-    public static class Output
+    public class Output: IOutput
     {
-        public static void PrintGeneratedAnagrams(Dictionary<string, string> anagrams)
-        {   
+        public void PrintGeneratedAnagrams(Dictionary<string, string> anagrams)
+        {
+            Console.WriteLine();
             Console.WriteLine("Generated anagrams: ");
             foreach (KeyValuePair<string, string> item in anagrams)
             {
                 Console.WriteLine(item.Value);
             }
+            Console.WriteLine();
         } 
     }
 }

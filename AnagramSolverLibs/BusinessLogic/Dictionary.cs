@@ -2,15 +2,14 @@
 using System.IO;
 using System.Collections.Generic;
 using AnagramSolver.Contracts;
-using System.Linq;
 
 namespace AnagramSolver.BusinessLogic
 {
-    public static class DictionaryManager
+    public class DictionaryManager : IWordRepository
     {
-        public static Dictionary<string, Element> elements = new Dictionary<string, Element>();
-        public static Dictionary<string, Element> LoadDictionary(string path) {
-            if(elements.Count == 0) {
+        public static Dictionary<string, DictionaryEntry> dictionaryEntries = new Dictionary<string, DictionaryEntry>();
+        public Dictionary<string, DictionaryEntry> LoadDictionary(string path) {
+            if(dictionaryEntries.Count == 0) {
                 try
                 {
                     using (StreamReader sr = new StreamReader(path))
@@ -19,9 +18,9 @@ namespace AnagramSolver.BusinessLogic
                         while ((line = sr.ReadLine()) != null)
                         {
                             string[] words = line.Split('\t');
-                            if (!elements.ContainsKey(words[0]))
+                            if (!dictionaryEntries.ContainsKey(words[0]))
                             {
-                                AddToDictionary(elements, words[0], words[1]);
+                                AddToDictionary(dictionaryEntries, words[0], words[1]);
                             }
                         }
                     }
@@ -32,22 +31,22 @@ namespace AnagramSolver.BusinessLogic
                     Console.WriteLine(e.Message);
                 }
             }
-            return elements;
+            return dictionaryEntries;
         }
 
-        public static bool CheckIfExists(string key)
+        public bool CheckIfExists(string key)
         {
             bool exists = false;
-            if (DictionaryManager.elements.ContainsKey(key))
+            if (DictionaryManager.dictionaryEntries.ContainsKey(key))
             {
                 exists = true;
             }
             return exists;
         }
 
-        private static void AddToDictionary(Dictionary<string, Element> elements, string word, string antecedent)
+        public void AddToDictionary(Dictionary<string, DictionaryEntry> elements, string word, string antecedent)
         {
-            Element theElement = new Element();
+            DictionaryEntry theElement = new DictionaryEntry();
 
             theElement.Word = word;
             theElement.Antecedent = antecedent;
