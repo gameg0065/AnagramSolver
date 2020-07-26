@@ -18,7 +18,8 @@ namespace AnagramSolver.UI
                 AnagramGenerator myAnagramGenerator = new AnagramGenerator();
                 Output theOutput = new Output();
                 theOutput.PrintGeneratedAnagrams(myAnagramGenerator.GenerateAnagrams(word, anagramNumber));
-                endApp = AskToEndApp();
+                // endApp = AskToEndApp();
+                endApp = true;
             }      
         }
         public string GetWord(int minLength)
