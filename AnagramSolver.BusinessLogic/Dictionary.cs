@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using AnagramSolver.Interfaces;
 using AnagramSolver.Contracts;
 
 namespace AnagramSolver.BusinessLogic

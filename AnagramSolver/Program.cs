@@ -2,8 +2,9 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
-using AnagramSolver.MyConsole;
 using AnagramSolver.BusinessLogic;
+using AnagramSolver.UI;
+
 
 namespace AnagramSolver
 {

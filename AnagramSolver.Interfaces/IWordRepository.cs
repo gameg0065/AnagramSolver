@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using AnagramSolver.Contracts;
 
 
-namespace AnagramSolver.Contracts
+namespace AnagramSolver.Interfaces
 {
     public interface IWordRepository
     {
