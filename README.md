@@ -4,8 +4,8 @@ C# program
 
 ## Usage
 ```C#
-    dotnet restore
     cd AnagramSolver/
+    dotnet restore
     dotnet run
 ```
 ## Contributing
