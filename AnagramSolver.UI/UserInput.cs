@@ -1,8 +1,8 @@
 ﻿using System;
+using AnagramSolver.Interfaces;
 using AnagramSolver.BusinessLogic;
-using AnagramSolver.Contracts;
 
-namespace AnagramSolver.MyConsole
+namespace AnagramSolver.UI
 {
     public class GetUserInput: IUserInteraction
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AnagramSolver.Contracts
+namespace AnagramSolver.Interfaces
 {
     public interface IUserInteraction
     {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AnagramSolver.Contracts;
+using AnagramSolver.Interfaces;
 using System.Linq;
 
 namespace AnagramSolver.BusinessLogic

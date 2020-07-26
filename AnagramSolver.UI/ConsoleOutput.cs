@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using AnagramSolver.Contracts;
+using AnagramSolver.Interfaces;
 
-namespace AnagramSolver.MyConsole
+namespace AnagramSolver.UI
 {
     public class Output: IOutput
     {

@@ -11,7 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AnagramSolverLibs\AnagramSolverLibs.csproj" />
+    <ProjectReference Include="../AnagramSolver.BusinessLogic/AnagramSolver.BusnessLogic.csproj" />
+    <ProjectReference Include="../AnagramSolver.Contracts/AnagramSolver.Contracts.csproj" />
+    <ProjectReference Include="../AnagramSolver.Interfaces/AnagramSolver.Interfaces.csproj" />
+    <ProjectReference Include="../AnagramSolver.UI/AnagramSolver.UI.csproj" />
   </ItemGroup>
 
 </Project>
