@@ -13,7 +13,8 @@ namespace AnagramSolver.BusinessLogic
             var test = word.ToCharArray();
             var q = word.Select(x => x.ToString());
             for (int i = 0; i < 1; i++) {
-                Recursion(test[i], i + 1, test, 2);
+                List<string> mytest = new List<string>();
+                Recursion(test[i], i + 1, test, 0, mytest);
             }
             foreach (var item in q) {
                 // Console.WriteLine(item);
@@ -24,21 +25,16 @@ namespace AnagramSolver.BusinessLogic
             }
             return generatedAnagrams;
         }
-        public char Recursion(char letter, int number, char[] word, int max) {
-            Console.WriteLine("Input to function: " + max + " number :    " + letter + " " + number + " " + word);
-            if(number < 0 || number > word.Length - 1 || max <= 0) {
-                Console.WriteLine("ESCAPED");
-                return letter;
-            }
-            max--;
-            for (var m = number; m < word.Length; m++) {
-                if(max == 0) {
-                    // m = word.Length - 1;
+        public void Recursion(char letter, int number, char[] word, int max, List<string> newWord) {
+            max++;
+            if(number < 0 || number > word.Length - 1 || max == word.Length) {
+                Console.WriteLine("ESCAPED from if "  + letter);
+            } else {
+                for (var m = number; m < word.Length; m++) {
+                    Console.WriteLine("ESCAPED " + letter);
+                    Recursion(word[m], word.Length - m, word, max, newWord);
                 }
-                Console.WriteLine("FUNCTION CALLED " + m + "  " + max);
-                Recursion(word[m], word.Length - m, word, max);
             }
-            return letter;
         }
     }
 
