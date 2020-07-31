@@ -13,18 +13,19 @@ namespace AnagramSolver.BusinessLogic
             Dictionary<string, string> generatedAnagrams = new Dictionary<string, string>();
             var q = word.Select(x => x.ToString());
             var test = word.ToCharArray();
-            for (int i = 0; i < 1; i++) {
-                Recursion(test, word.Length - 1);
-                // List<char[]> test3 = new List<char[]>();
-                // test3.Add(ShiftToRight(test));
-                // test3.ForEach(delegate (char[] name)
-                // {
-                //     Print(name);
-                //     Recursion(word, word.Length - 1);
-                // });
-                Console.WriteLine(test);
-
+            var original = word.ToCharArray();
+            var test3 = word.ToCharArray();
+            for (int i = 0; i < word.Length; i++)
+            {
+                Console.WriteLine("This line works here");
+                Console.WriteLine();
+                Console.WriteLine();
+                test = original.Where(val => val != ' ').ToArray();
+                test = test.Where(val => val != word[i]).ToArray();
+                Console.WriteLine(word[i]);
+                Recursion(test, test3);
             }
+
             foreach (var item in q) {
                 // Console.WriteLine(item);
                 DictionaryManager theDictionaryManager = new DictionaryManager();
@@ -39,26 +40,35 @@ namespace AnagramSolver.BusinessLogic
             string test = new string(s);
             Console.WriteLine(test);
         }
-        public void Recursion(char[] word, int max) {
-            if(max - 1 >= 0) {
-                max--;
-                char temp = word[max];
-                word[max] = word[max + 1];
-                word[max + 1] = temp;
-                string test1 = new string(word);
-                for (int y = 0; y < 2; y++)
+        public void Recursion(char[] word, char[] originalWord) {
+            // if(max - 1 >= 0) {
+            //     max--;
+            //     char temp = word[max];
+            //     word[max] = word[max + 1];
+            //     word[max + 1] = temp;
+            //     string test1 = new string(word);
+            //     for (int y = 0; y < 2; y++)
+            //     {
+            //         List<char[]> test3 = new List<char[]>();
+            //         test3.Add(Switch(word));
+            //         test3.ForEach(Print);
+            //         test3.ForEach(delegate (char[] name) {
+            //             Print(name);
+            //             Recursion(name, max);
+            //         });
+            //         // string test = new string(word);
+            //         // Console.WriteLine(test);
+            //     }
+            // }
+            if(word.Length >= 0) {
+                for (int i = 0; i < word.Length; i++)
                 {
-                    List<char[]> test3 = new List<char[]>();
-                    test3.Add(Switch(word));
-                    test3.ForEach(Print);
-                    test3.ForEach(delegate (char[] name) {
-                        Print(name);
-                        Recursion(name, max);
-                    });
-                    // string test = new string(word);
-                    // Console.WriteLine(test);
+                    Console.WriteLine(word[i]);
+                    Recursion(word.Where(val => val != word[i]).ToArray(), originalWord);
+                    Console.WriteLine("test");
                 }
             }
+
         }
         public char[] Switch(char[] word) {
             var last = word.Length - 1;
