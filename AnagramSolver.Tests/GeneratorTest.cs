@@ -1,25 +1,38 @@
 using NUnit.Framework;
 using AnagramSolver.BusinessLogic;
 
-namespace Prime.UnitTests.Services
+namespace AnagramSolver.Tests
 {
     [TestFixture]
-    public class PrimeService_IsPrimeShould
+    public class AnagramGeneratorTests
     {
-        private AnagramGenerator _primeService;
+        private AnagramGenerator anagramGenerator;
+        private DictionaryManager dictionaryManager;
+
 
         [SetUp]
         public void SetUp()
         {
-            _primeService = new AnagramGenerator();
+            dictionaryManager = new DictionaryManager();
+            anagramGenerator = new AnagramGenerator();
         }
 
-        [Test]
-        public void IsPrime_InputIs1_ReturnFalse()
+        [TestCase("alus", "sula", "../../../testResources/zodynas.txt")]
+        [TestCase("sula", "alus", "../../../testResources/zodynas.txt")]
+        [TestCase("labas", "balas", "../../../testResources/zodynas.txt")]
+        [TestCase("pilkas", "plikas", "../../../testResources/zodynas.txt")]
+        public void AnagramGeneratorTest(string input, string expectedOutput, string dictionaryPath)
         {
-            var result = _primeService.Test("Mantas");
-
-            Assert.IsFalse(result, "1 should not be prime");
+            var isExpectedOutput = false;
+            dictionaryManager.LoadDictionary(dictionaryPath);
+            var result = anagramGenerator.GenerateAnagrams(input, 1);
+            foreach (var item in result)
+            {
+                if(item == expectedOutput) {
+                    isExpectedOutput = true;
+                }
+            }
+            Assert.IsTrue(isExpectedOutput, "Output is not - " + expectedOutput);
         }
     }
 }
