@@ -1,26 +1,41 @@
 ﻿using System.Collections.Generic;
 using AnagramSolver.Interfaces;
 using System.Linq;
+using System;
 
 namespace AnagramSolver.BusinessLogic
 {
     public class AnagramGenerator: IAnagramSolver
     {
-        public Dictionary<string, string> GenerateAnagrams(string word, int maxNumberOfAnagrams)
+        public List<string> GenerateAnagrams(string word, int maxNumberOfAnagrams)
         {
-            Dictionary<string, string> generatedAnagrams = new Dictionary<string, string>();
-            var q = word.Select(x => x.ToString());
-            int size = word.Count();
-            for (int i = 0; i < size - 1; i++) {
-                q = q.SelectMany(x => word, (x, y) => x + y);
+            List<string> generatedAnagrams = new List<string>();
+            List<string> returnList = new List<string>();
+            for (int i = 0; i < word.Length; i++)
+            {
+                var test = word.Where(val => val != word[i]).ToArray();
+                returnList = FindAllCombinations(test, word.ToCharArray(), word[i].ToString(), returnList);
             }
-            foreach (var item in q) {
+
+            foreach (var item in returnList) {
                 DictionaryManager theDictionaryManager = new DictionaryManager();
-                if(theDictionaryManager.CheckIfExists(item) && item != word && !generatedAnagrams.ContainsKey(item) && generatedAnagrams.Count < maxNumberOfAnagrams) {
-                    generatedAnagrams.Add(key: item, item);
+                if(theDictionaryManager.CheckIfExists(item) && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
+                    generatedAnagrams.Add(item);
                 }
             }
             return generatedAnagrams;
+        }
+         public List<string> FindAllCombinations(char[] word, char[] originalWord, string answ, List<string> returnList) {
+            for (int i = 0; i < word.Length; i++)
+            {
+                answ += word[i];
+                FindAllCombinations(word.Where((val, idx) => idx != Array.IndexOf(word, word[i])).ToArray(), originalWord, answ, returnList);
+                if(originalWord.Length == answ.Length) {
+                    returnList.Add(answ);
+                }
+                answ = answ.Remove(answ.Length - 1);
+            }
+            return returnList;
         }
     }
 }
