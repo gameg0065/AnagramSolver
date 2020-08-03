@@ -1,4 +1,4 @@
-﻿@page "/Dictionary/{id:int}"
+﻿@page "/Dictionary/{id:int?}"
 @using AnagramSolver.WebApp.Pages
 @model DictionaryModel
 @{
@@ -14,7 +14,7 @@
             <a href="/Home/Index.cshtml/@Model.Dictionary.ElementAt(i).Key" target="_blank"><p>@Model.Dictionary.ElementAt(i).Key</p></a>
         }
     } else {
-        <p>Can't find anagrams for such word. :(</p>
+        <p>Error</p>
     }
 
 <div class="buttons">

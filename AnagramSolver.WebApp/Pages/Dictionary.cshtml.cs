@@ -26,7 +26,9 @@ namespace AnagramSolver.WebApp.Pages
         }
 
         public void OnGet(int id) {
-            Id = id;
+            if(id > 0 ) {
+                Id = id;
+            }
             Dictionary = GetDictionary(Configuration["DictionaryPath"]);
         }
         public int Next(string next, int id)
