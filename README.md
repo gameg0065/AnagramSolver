@@ -3,6 +3,19 @@
 C# program
 
 ## Usage
+
+WebApp:
+```C#
+    cd AnagramSolver.WebApp/
+    dotnet watch run
+
+
+    Home/Index.cshtml/{word}
+    Dictionary/{page_number}
+```
+
+
+Console Application:
 ```C#
     cd AnagramSolver/
     dotnet restore

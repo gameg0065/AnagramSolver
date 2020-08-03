@@ -1,0 +1,23 @@
+﻿@page "/Dictionary/{id:int?}"
+@using AnagramSolver.WebApp.Pages
+@model DictionaryModel
+@{
+    ViewData["Title"] = "Dictionary";
+}
+<h1>@ViewData["Title"]</h1>
+
+@if(Model.Dictionary.Count > 0) {
+        <p>Dictionary entries:</p>
+        <hr>
+        @for (int i = Model.Id + ((Model.Id - 1) * Model.NumberOfItemsToDislay); i < Model.Id * Model.NumberOfItemsToDislay; i ++)
+        {
+            <a href="/Home/Index.cshtml/@Model.Dictionary.ElementAt(i).Key" target="_blank"><p>@Model.Dictionary.ElementAt(i).Key</p></a>
+        }
+    } else {
+        <p>Error</p>
+    }
+
+<div class="buttons">
+    <a asp-page="./Dictionary" asp-route-id="@Model.Next("", @Model.Id)"><button>Prev</button></a>
+    <a asp-page="./Dictionary" asp-route-id="@Model.Next("True", @Model.Id)"><button>Next</button></a>
+</div>
