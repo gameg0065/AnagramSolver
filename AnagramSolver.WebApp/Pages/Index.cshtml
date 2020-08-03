@@ -1,5 +1,17 @@
-﻿@page
+﻿@page "Home/Index.cshtml/{id}"
 @model IndexModel
 @{
-    ViewData["Title"] = "Empty page";
+    ViewData["Title"] = "Anagram Generator";
 }
+<p>
+    @if(Model.Anagrams.Count > 0) {
+        <p>Generated anagrams:</p>
+        <hr>
+        @foreach (var item in Model.Anagrams)
+        {
+            <p>@item</p>
+        }
+    } else {
+        <p>Can't find anagrams for such word. :(</p>
+    }
+</p>
