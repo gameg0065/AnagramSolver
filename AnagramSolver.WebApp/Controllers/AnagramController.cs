@@ -11,8 +11,8 @@ using System.Data.Entity;
 
 namespace AnagramSolver.WebApp.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AnagramController : ControllerBase
     {
 
@@ -25,22 +25,20 @@ namespace AnagramSolver.WebApp.Controllers
             Configuration = configuration;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> GetAnagrams()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<List<string>>> Get(string id)
         {
             var dictionaryManager = new DictionaryManager();
             var anagramGenerator = new AnagramGenerator();
-            // dictionaryManager.LoadDictionary(Configuration["DictionaryPath"]);
-            var todoItems = anagramGenerator.GenerateAnagrams("alus", 1);
-            var query = from item in todoItems select item;
-            Console.WriteLine("test");
+            dictionaryManager.LoadDictionary(Configuration["DictionaryPath"]);
+            var items = anagramGenerator.GenerateAnagrams(id, 10);
 
-            if (todoItems.Count < 1)
+            if (items.Count < 1)
             {
                 return NotFound();
             }
 
-            return await query.AsQueryable().ToListAsync();
+            return items;
         }
     }
 }
