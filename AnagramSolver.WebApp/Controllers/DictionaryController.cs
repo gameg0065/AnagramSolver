@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -55,6 +56,14 @@ namespace AnagramSolver.WebApp.Controllers
             }
 
             return items;
+        }
+        [HttpGet("download")]
+        public async Task<IActionResult> Download()
+        {
+            var filePath = Configuration["DictionaryPath"];
+            _logger.LogInformation($"downloading file [{filePath}].");
+            var bytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            return File(bytes, "text/plain; charset=us-ascii", "zodynas");
         }
     }
 }
