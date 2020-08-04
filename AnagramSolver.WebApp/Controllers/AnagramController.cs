@@ -26,18 +26,21 @@ namespace AnagramSolver.WebApp.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<string>>> Get(string id)
+        public async Task<ActionResult<List<string>>> Get(string id, [FromQuery] int numberOfAnagramsToGenerate)
         {
+            if(numberOfAnagramsToGenerate == 0) {
+                numberOfAnagramsToGenerate = 1;
+            }
             var dictionaryManager = new DictionaryManager();
             var anagramGenerator = new AnagramGenerator();
             dictionaryManager.LoadDictionary(Configuration["DictionaryPath"]);
-            var items = anagramGenerator.GenerateAnagrams(id, 10);
+            var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate);
 
             if (items.Count < 1)
             {
                 return NotFound();
             }
-
+            
             return items;
         }
     }
