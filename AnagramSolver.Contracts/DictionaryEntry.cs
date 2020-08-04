@@ -1,8 +1,9 @@
 ﻿
 namespace AnagramSolver.Contracts
 {
-    public class Anagram
+    public class DictionaryEntry
     {
         public string Word { get; set; }
+        public string Antecedent { get; set; }
     }
 }
