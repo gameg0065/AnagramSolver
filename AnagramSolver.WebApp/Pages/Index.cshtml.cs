@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using AnagramSolver.BusinessLogic;
-using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -15,14 +14,12 @@ namespace AnagramSolver.WebApp.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IConfiguration Configuration;
         static readonly HttpClient client = new HttpClient();
         public List<string> Anagrams { get; private set; } = new List<string>();
 
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration)
+        public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
-            Configuration = configuration;
         }
         public async Task OnGetAsync(string id)
         {
@@ -30,7 +27,6 @@ namespace AnagramSolver.WebApp.Pages
         }
         private async Task FindAnagrams(string word)
         {
-            // Call asynchronous network methods in a try/catch block to handle exceptions.
             try
             {
                 HttpResponseMessage response = await client.GetAsync("https://localhost:5001/api/Anagram/" + word);
