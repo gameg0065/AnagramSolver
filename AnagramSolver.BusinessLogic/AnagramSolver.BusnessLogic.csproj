@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="../AnagramSolver.Contracts/AnagramSolver.Contracts.csproj" />
     <ProjectReference Include="../AnagramSolver.Interfaces/AnagramSolver.Interfaces.csproj" />
+    <ProjectReference Include="../AnagramSolver.Data/AnagramSolver.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -18,7 +18,6 @@ namespace AnagramSolver.Data
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = cn;
             cmd.CommandType = CommandType.Text;
-            Console.WriteLine(dictionary.Count);
             for(int i = 0; i < dictionary.Count; i++)
             {
                 var item = dictionary.ElementAt(i);
@@ -27,6 +26,19 @@ namespace AnagramSolver.Data
             }
            
             cn.Close();
+        }
+        public bool CheckIfExists(string key)
+        {
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = "Server=localhost;Database=anagramsolver; User Id = sa; Password = LAMA55lama;";
+            cn.Open();
+
+            SqlCommand checkWord = new SqlCommand("SELECT COUNT(*) FROM [Word] WHERE ([word] = @word)");
+            checkWord.Connection = cn;
+            checkWord.Parameters.AddWithValue("@word", key);
+            var result = (int)checkWord.ExecuteScalar();
+            cn.Close();
+            return result > 0;
         }
     }
 }
