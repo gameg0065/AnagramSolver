@@ -12,6 +12,11 @@ WebApp:
 
     Home/Index.cshtml/{word}
     Dictionary/{page_number}
+
+
+    /api/dictionary/{index}
+    /api/dictionary/download
+    /api/anagram/{word}
 ```
 
 

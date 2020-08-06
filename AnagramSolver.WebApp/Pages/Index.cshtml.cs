@@ -6,31 +6,39 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using AnagramSolver.BusinessLogic;
-using Microsoft.Extensions.Configuration;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace AnagramSolver.WebApp.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IConfiguration Configuration;
+        static readonly HttpClient client = new HttpClient();
         public List<string> Anagrams { get; private set; } = new List<string>();
 
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration)
+        public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
-            Configuration = configuration;
         }
-
-        public void OnGet(string id)
+        public async Task OnGetAsync(string id)
         {
-            Anagrams = FindAnagrams(id);
+            await FindAnagrams(id);
         }
-        private List<string> FindAnagrams(string word) {
-            var dictionaryManager = new DictionaryManager();
-            var anagramGenerator = new AnagramGenerator();
-            dictionaryManager.LoadDictionary(Configuration["DictionaryPath"]);
-            return anagramGenerator.GenerateAnagrams(word, 1);
+        private async Task FindAnagrams(string word)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync("https://localhost:5001/api/Anagram/" + word);
+                response.EnsureSuccessStatusCode();
+                var jsonString = await response.Content.ReadAsStringAsync();
+                Anagrams = JsonConvert.DeserializeObject<List<string>>(jsonString);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
         }
     }
 }
