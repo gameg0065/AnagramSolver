@@ -31,11 +31,12 @@ namespace AnagramSolver.WebApp.Controllers
             if(numberOfAnagramsToGenerate == 0) {
                 numberOfAnagramsToGenerate = 1;
             }
-            var dictionaryManager = new DictionaryManager();
             var anagramGenerator = new AnagramGenerator();
-            dictionaryManager.LoadDictionary(Configuration["DictionaryPath"]);
+            var dataBase = new DataBase();
             var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate);
-
+            dataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString() , id, items);
+            
+            
             if (items.Count < 1)
             {
                 return NotFound();

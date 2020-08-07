@@ -34,10 +34,9 @@ namespace AnagramSolver.BusinessLogic
             cn.ConnectionString = "Server=localhost;Database=anagramsolver; User Id = sa; Password = LAMA55lama;";
             cn.Open();
 
-            SqlCommand cmd = new SqlCommand();
+            SqlCommand cmd = new SqlCommand("INSERT INTO CachedWord (searchWord, anagramId) " + "VALUES ('" + item.Replace("'", "''") + "', '" + index + "')");
             cmd.Connection = cn;
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "INSERT INTO CachedWord (searchWord, anagramId) " + "VALUES ('" + item.Replace("'", "''") + "', '" + index + "')";
             cmd.ExecuteNonQuery();
 
             cn.Close();
@@ -114,6 +113,35 @@ namespace AnagramSolver.BusinessLogic
             }
             cn.Close();
             return dictionary;
+        }
+        public void DeleteTable(string item)
+        {
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = "Server=localhost;Database=anagramsolver; User Id = sa; Password = LAMA55lama;";
+            cn.Open();
+
+            SqlCommand cmd = new SqlCommand("DeleteTable");
+            cmd.Connection = cn;
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@Tablename", SqlDbType.VarChar).Value = item;
+
+            cmd.ExecuteNonQuery();
+            cn.Close();
+        }
+        public void SaveUserLog(string ip, string item, List<string> anagrams)
+        {
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = "Server=localhost;Database=anagramsolver; User Id = sa; Password = LAMA55lama;";
+            cn.Open();
+            for(int i = 0; i < anagrams.Count; i++) {
+                SqlCommand cmd = new SqlCommand("INSERT INTO UserLog (userIp, searchTime, searchWord, anagram) " + "VALUES ('" +  ip + "', '" +  DateTime.UtcNow +  "', '" + item.Replace("'", "''") + "', '" + anagrams[i] + "')");
+                cmd.Connection = cn;
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
+
+            cn.Close();
         }
     }
 }
