@@ -40,5 +40,26 @@ namespace AnagramSolver.Data
             cn.Close();
             return result > 0;
         }
+        public Dictionary<string, DictionaryEntry> FilterWords(string key)
+        {
+            var dictionary = new Dictionary<string, DictionaryEntry>();
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = "Server=localhost;Database=anagramsolver; User Id = sa; Password = LAMA55lama;";
+            cn.Open();
+
+            SqlCommand checkWord = new SqlCommand("SELECT * FROM Word WHERE word LIKE @word");
+            checkWord.Connection = cn;
+            checkWord.Parameters.Add(new SqlParameter("word", key + '%'));
+            SqlDataReader reader = checkWord.ExecuteReader();
+            while (reader.Read())
+            {
+                DictionaryEntry theElement = new DictionaryEntry();
+                theElement.Word = reader.GetString(1);
+                theElement.Antecedent = reader.GetString(2);
+                dictionary.Add(key: reader.GetString(1), value: theElement);
+            }
+            cn.Close();
+            return dictionary;
+        }
     }
 }

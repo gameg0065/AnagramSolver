@@ -19,8 +19,8 @@ namespace AnagramSolver.BusinessLogic
 
             foreach (var item in returnList) {
                 DictionaryManager theDictionaryManager = new DictionaryManager();
-                var databaseManager = new DatabaseManager();
-                if(databaseManager.CheckIfExists(item) && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
+                var dataBase = new DataBase();
+                if(dataBase.CheckIfExists(item) && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
                     generatedAnagrams.Add(item);
                 }
             }

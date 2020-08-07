@@ -4,8 +4,6 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using AnagramSolver.BusinessLogic;
 using AnagramSolver.UI;
-using AnagramSolver.Data;
-
 
 namespace AnagramSolver
 {

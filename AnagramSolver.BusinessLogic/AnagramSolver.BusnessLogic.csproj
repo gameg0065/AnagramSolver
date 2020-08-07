@@ -7,7 +7,10 @@
   <ItemGroup>
     <ProjectReference Include="../AnagramSolver.Contracts/AnagramSolver.Contracts.csproj" />
     <ProjectReference Include="../AnagramSolver.Interfaces/AnagramSolver.Interfaces.csproj" />
-    <ProjectReference Include="../AnagramSolver.Data/AnagramSolver.Data.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+   </ItemGroup>
 
 </Project>

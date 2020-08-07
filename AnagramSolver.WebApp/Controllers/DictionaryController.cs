@@ -39,6 +39,19 @@ namespace AnagramSolver.WebApp.Controllers
 
             return items;
         }
+        [HttpGet("filter/{word}")]
+        public async Task<ActionResult<Dictionary<string, DictionaryEntry>>> GetFilteredWord(string word)
+        {
+            var dataBase = new DataBase();
+            var items = dataBase.FilterWords(word);
+
+            if (items.Count < 1)
+            {
+                return NotFound();
+            }
+            
+            return items;
+        }
         [HttpGet("{index}")]
         public async Task<ActionResult<Dictionary<string, DictionaryEntry>>> Get(int index)
         {
