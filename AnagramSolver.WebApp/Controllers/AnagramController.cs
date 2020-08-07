@@ -33,10 +33,10 @@ namespace AnagramSolver.WebApp.Controllers
             }
             var anagramGenerator = new AnagramGenerator();
             var dataBase = new DataBase();
+            DataBase.connectionString = Configuration["ConnectionString"];
             var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate);
-            dataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString() , id, items);
-            
-            
+            dataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString() , id, items);    
+        
             if (items.Count < 1)
             {
                 return NotFound();
