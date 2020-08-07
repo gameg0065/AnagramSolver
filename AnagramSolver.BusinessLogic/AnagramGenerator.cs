@@ -9,6 +9,12 @@ namespace AnagramSolver.BusinessLogic
     {
         public List<string> GenerateAnagrams(string word, int maxNumberOfAnagrams)
         {
+            var dataBase = new DataBase();
+            if(dataBase.CheckIfExistsInCached(word)) {
+                
+                return dataBase.GetCachedWords(word);
+            }
+
             List<string> generatedAnagrams = new List<string>();
             List<string> returnList = new List<string>();
             for (int i = 0; i < word.Length; i++)
@@ -18,8 +24,9 @@ namespace AnagramSolver.BusinessLogic
             }
 
             foreach (var item in returnList) {
-                DictionaryManager theDictionaryManager = new DictionaryManager();
-                if(theDictionaryManager.CheckIfExists(item) && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
+                var index  = dataBase.CheckIfExistsInWords(item);
+                if(index > 0 && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
+                    dataBase.AddToChaced(word, index);
                     generatedAnagrams.Add(item);
                 }
             }

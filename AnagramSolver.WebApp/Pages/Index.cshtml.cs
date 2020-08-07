@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using AnagramSolver.BusinessLogic;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Web;
 
 namespace AnagramSolver.WebApp.Pages
 {
