@@ -8,6 +8,6 @@ namespace AnagramSolver.Models
         public int ID { get; set; }
         public string UserIP { get; set; }
         public DateTime LogDate { get; set; }
-        public virtual ICollection<CachedWordEntity> CachedWordEntity { get; set; }
+        // public virtual ICollection<CachedWordEntity> CachedWordEntity { get; set; }
     }
 }
