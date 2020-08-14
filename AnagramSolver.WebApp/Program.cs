@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using AnagramSolver.DAL;
+using AnagramSolver.Models;
 
 namespace AnagramSolver.WebApp
 {
@@ -15,31 +16,23 @@ namespace AnagramSolver.WebApp
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
 
-            CreateDbIfNotExists(host);
-
-            host.Run();
-        }
-
-        private static void CreateDbIfNotExists(IHost host)
-        {
-            using (var scope = host.Services.CreateScope())
+            using (var db = new AnagramContext())
             {
-                var services = scope.ServiceProvider;
-
-                try
-                {
-                    var context = services.GetRequiredService<AnagramContext>();
-                    DbInitializer.Initialize(context);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred creating the DB.");
-                }
+                // var query = from b in db.WordEntities orderby b.Word select b;
+                // Console.WriteLine("All blogs in the database:");
+                // foreach (var item in query)
+                // {
+                //     Console.WriteLine(item.Word);
+                // }
+                // var word = new WordEntity { Word = "test" };
+                // db.WordEntities.Add(word);
+                db.SaveChanges();
             }
+
+            CreateHostBuilder(args).Build().Run();
         }
+
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
