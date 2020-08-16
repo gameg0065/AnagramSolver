@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using AnagramSolver.BusinessLogic;
 using AnagramSolver.Contracts;
 using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+using AnagramSolver.DAL;
+using AnagramSolver.Models;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -28,6 +31,18 @@ namespace AnagramSolver.WebApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<List<string>>> Get(string id, [FromQuery] int numberOfAnagramsToGenerate)
         {
+            // using (var db = new AnagramContext(Configuration["ConnectionString"]))
+            // {
+            //     var query = from b in db.WordEntities orderby b.Word select b;
+            //     Console.WriteLine("All blogs in the database:");
+            //     foreach (var item in query)
+            //     {
+            //         Console.WriteLine(item.Word);
+            //     }
+            //     // var word = new WordEntity { Word = "test" };
+            //     // db.WordEntities.Add(word);
+            //     db.SaveChanges();
+            // }
             if(numberOfAnagramsToGenerate == 0) {
                 numberOfAnagramsToGenerate = 1;
             }
