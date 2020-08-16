@@ -17,7 +17,6 @@ namespace AnagramSolver.DAL
 
         protected void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
         {
-            Console.WriteLine("test");
             modelBuilder.Entity<WordEntity>().ToTable("WordEntities");
             modelBuilder.Entity<UserLogEntity>().ToTable("UserLogEntities");
             modelBuilder.Entity<CachedWordEntity>().ToTable("CachedWordEntities");

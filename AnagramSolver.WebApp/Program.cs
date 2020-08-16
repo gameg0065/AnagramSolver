@@ -25,8 +25,8 @@ namespace AnagramSolver.WebApp
                 // {
                 //     Console.WriteLine(item.Word);
                 // }
-                // var word = new WordEntity { Word = "test" };
-                // db.WordEntities.Add(word);
+                var word = new WordEntity { Word = "test" };
+                db.WordEntities.Add(word);
                 db.SaveChanges();
             }
 
