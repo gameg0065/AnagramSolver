@@ -4,14 +4,16 @@ using AnagramSolver.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnagramSolver.EF.CodeFirst.Migrations
 {
     [DbContext(typeof(AnagramContext))]
-    partial class AnagramContextModelSnapshot : ModelSnapshot
+    [Migration("20200817070347_AddValidations")]
+    partial class AddValidations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

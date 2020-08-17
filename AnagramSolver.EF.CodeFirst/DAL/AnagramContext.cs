@@ -1,5 +1,4 @@
 using AnagramSolver.Models;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnagramSolver.DAL

@@ -4,14 +4,16 @@ using AnagramSolver.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnagramSolver.EF.CodeFirst.Migrations
 {
     [DbContext(typeof(AnagramContext))]
-    partial class AnagramContextModelSnapshot : ModelSnapshot
+    [Migration("20200817065303_AddValidation")]
+    partial class AddValidation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,28 +23,27 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
 
             modelBuilder.Entity("AnagramSolver.Models.CachedWordEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
                     b.Property<string>("SearchWord")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserLogEntityId")
+                    b.Property<int?>("UserLogEntityID")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.HasIndex("UserLogEntityId");
+                    b.HasIndex("UserLogEntityID");
 
                     b.ToTable("CachedWordEntities");
                 });
 
             modelBuilder.Entity("AnagramSolver.Models.UserLogEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
@@ -53,19 +54,19 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                     b.Property<string>("UserIP")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("UserLogEntities");
                 });
 
             modelBuilder.Entity("AnagramSolver.Models.WordEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("CachedWordEntityId")
+                    b.Property<int?>("CachedWordEntityID")
                         .HasColumnType("int");
 
                     b.Property<string>("Category")
@@ -75,9 +76,9 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.HasIndex("CachedWordEntityId");
+                    b.HasIndex("CachedWordEntityID");
 
                     b.ToTable("WordEntities");
                 });
@@ -86,14 +87,14 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                 {
                     b.HasOne("AnagramSolver.Models.UserLogEntity", null)
                         .WithMany("CachedWordEntity")
-                        .HasForeignKey("UserLogEntityId");
+                        .HasForeignKey("UserLogEntityID");
                 });
 
             modelBuilder.Entity("AnagramSolver.Models.WordEntity", b =>
                 {
                     b.HasOne("AnagramSolver.Models.CachedWordEntity", null)
                         .WithMany("WordEntity")
-                        .HasForeignKey("CachedWordEntityId");
+                        .HasForeignKey("CachedWordEntityID");
                 });
 #pragma warning restore 612, 618
         }

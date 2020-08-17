@@ -41,7 +41,7 @@ namespace AnagramSolver.WebApp.Controllers
             //     }
             //     // var word = new WordEntity { Word = "test" };
             //     // db.WordEntities.Add(word);
-            //     db.SaveChanges();
+            //     // db.SaveChanges();
             // }
             if(numberOfAnagramsToGenerate == 0) {
                 numberOfAnagramsToGenerate = 1;
