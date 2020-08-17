@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using AnagramSolver.BusinessLogic;
 using AnagramSolver.Contracts;
 using System.Data.Entity;
+using AnagramSolver.DAL;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -42,8 +43,8 @@ namespace AnagramSolver.WebApp.Controllers
         [HttpGet("filter/{word}")]
         public async Task<ActionResult<Dictionary<string, DictionaryEntry>>> GetFilteredWord(string word)
         {
-            var dataBase = new DataBase();
-            var items = dataBase.FilterWords(word);
+            var dataBase = new CodeFirstDataBase();
+            var items = dataBase.FilterWords(word, Configuration["ConnectionString"]);
 
             if (items.Count < 1)
             {

@@ -2,18 +2,19 @@
 using AnagramSolver.Interfaces;
 using System.Linq;
 using System;
+using AnagramSolver.DAL;
 
 namespace AnagramSolver.BusinessLogic
 {
-    public class AnagramGenerator: IAnagramSolver
+    public class AnagramGenerator
     {
-        public List<string> GenerateAnagrams(string word, int maxNumberOfAnagrams)
+        public List<string> GenerateAnagrams(string word, int maxNumberOfAnagrams, string connString)
         {
             var dataBase = new DataBase();
-            if(dataBase.CheckIfExistsInCached(word)) {
+            // if(dataBase.CheckIfExistsInCached(word)) {
                 
-                return dataBase.GetCachedWords(word);
-            }
+            //     return dataBase.GetCachedWords(word);
+            // }
 
             List<string> generatedAnagrams = new List<string>();
             List<string> returnList = new List<string>();
@@ -24,7 +25,8 @@ namespace AnagramSolver.BusinessLogic
             }
 
             foreach (var item in returnList) {
-                var index  = dataBase.CheckIfExistsInWords(item);
+                var codeFirstDataBase = new CodeFirstDataBase();
+                var index  = codeFirstDataBase.CheckIfExistsInWords(item, connString);
                 if(index > 0 && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
                     dataBase.AddToChaced(word, index);
                     generatedAnagrams.Add(item);

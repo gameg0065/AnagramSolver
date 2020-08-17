@@ -43,13 +43,18 @@ namespace AnagramSolver.WebApp.Controllers
             //     // db.WordEntities.Add(word);
             //     // db.SaveChanges();
             // }
+            // var codeFirstDataBase = new CodeFirstDataBase();
+            // var temp = new DictionaryManager();
+            // codeFirstDataBase.AddFromFile(temp.LoadDictionary("../AnagramSolver/resources/zodynas.txt"), Configuration["ConnectionString"]);
+
+
             if(numberOfAnagramsToGenerate == 0) {
                 numberOfAnagramsToGenerate = 1;
             }
             var anagramGenerator = new AnagramGenerator();
             var dataBase = new DataBase();
             DataBase.connectionString = Configuration["ConnectionString"];
-            var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate);
+            var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate, Configuration["ConnectionString"]);
             dataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString() , id, items);    
         
             if (items.Count < 1)
