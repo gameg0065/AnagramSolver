@@ -1,0 +1,47 @@
+﻿using System.Collections.Generic;
+using AnagramSolver.Interfaces;
+using System.Linq;
+using System;
+using AnagramSolver.DAL;
+using AnagramSolver.Models;
+using System.ComponentModel;
+
+namespace AnagramSolver.Generic
+{
+    public enum Gender
+    {
+        Male = 1,
+        Female = 2,
+        Other = 3
+    }
+
+    public enum Weekday
+    {
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        Sunday
+    }
+    public class MapValueToEnum<T, TValue> 
+    {
+        public static T Map(TValue value)
+        {
+            try
+            {
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                if (converter != null)
+                {
+                    return (T)converter.ConvertFromString(value.ToString());
+                }
+                return default(T);
+            }
+            catch (NotSupportedException)
+            {
+                return default(T);
+            }
+        }
+    }
+}

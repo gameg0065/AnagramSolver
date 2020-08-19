@@ -4,13 +4,17 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using AnagramSolver.BusinessLogic;
 using AnagramSolver.UI;
+using AnagramSolver.Generic;
 
 namespace AnagramSolver
 {
     class Program
     {
         static void Main(string[] args) {
-            StartApp();
+            // StartApp();
+            // Console.WriteLine(CustomGeneric.MapIntToGender(2));
+            Console.WriteLine(MapValueToEnum<Gender, int>.Map(2));
+            Console.WriteLine(MapValueToEnum<Gender, string>.Map("Male"));
         }
 
         private static void StartApp() {
