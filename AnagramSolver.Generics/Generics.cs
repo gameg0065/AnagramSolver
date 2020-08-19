@@ -40,7 +40,7 @@ namespace AnagramSolver.Generic
             }
             catch (NotSupportedException)
             {
-                return default(T);
+                throw new Exception("Value " + value + " us not part of " + typeof(T).FullName + " enum");
             }
         }
     }

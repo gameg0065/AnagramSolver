@@ -11,10 +11,7 @@ namespace AnagramSolver
     class Program
     {
         static void Main(string[] args) {
-            // StartApp();
-            // Console.WriteLine(CustomGeneric.MapIntToGender(2));
-            Console.WriteLine(MapValueToEnum<Gender, int>.Map(2));
-            Console.WriteLine(MapValueToEnum<Gender, string>.Map("Male"));
+            StartApp();
         }
 
         private static void StartApp() {
