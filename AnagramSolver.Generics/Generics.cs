@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using AnagramSolver.Interfaces;
-using System.Linq;
-using System;
-using AnagramSolver.DAL;
-using AnagramSolver.Models;
+﻿using System;
 using System.ComponentModel;
 
 namespace AnagramSolver.Generic
