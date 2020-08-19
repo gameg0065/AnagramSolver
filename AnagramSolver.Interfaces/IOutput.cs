@@ -2,7 +2,7 @@
 
 namespace AnagramSolver.Interfaces
 {
-    public interface IOutput
+    public interface IDisplay
     {
         void PrintGeneratedAnagrams(List<string> anagrams);
     }
