@@ -31,36 +31,20 @@ namespace AnagramSolver.WebApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<List<string>>> Get(string id, [FromQuery] int numberOfAnagramsToGenerate)
         {
-            // using (var db = new AnagramContext(Configuration["ConnectionString"]))
-            // {
-            //     var query = from b in db.WordEntities orderby b.Word select b;
-            //     Console.WriteLine("All blogs in the database:");
-            //     foreach (var item in query)
-            //     {
-            //         Console.WriteLine(item.Word);
-            //     }
-            //     // var word = new WordEntity { Word = "test" };
-            //     // db.WordEntities.Add(word);
-            //     // db.SaveChanges();
-            // }
-            // var codeFirstDataBase = new CodeFirstDataBase();
-            // var temp = new DictionaryManager();
-            // codeFirstDataBase.AddFromFile(temp.LoadDictionary("../AnagramSolver/resources/zodynas.txt"), Configuration["ConnectionString"]);
-
-
             if(numberOfAnagramsToGenerate == 0) {
                 numberOfAnagramsToGenerate = 1;
             }
+            
             var anagramGenerator = new AnagramGenerator();
-            var dataBase = new DataBase();
-            DataBase.connectionString = Configuration["ConnectionString"];
             var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate, Configuration["ConnectionString"]);
-            dataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString() , id, items);    
         
             if (items.Count < 1)
             {
                 return NotFound();
             }
+
+            var codeFirstDataBase = new CodeFirstDataBase();
+            codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
             
             return items;
         }

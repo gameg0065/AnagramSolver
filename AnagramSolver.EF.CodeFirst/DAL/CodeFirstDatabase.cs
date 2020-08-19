@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Data;
 using AnagramSolver.Contracts;
 using AnagramSolver.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnagramSolver.DAL
 {
@@ -24,61 +25,52 @@ namespace AnagramSolver.DAL
             }
         }
 
-        // public void AddToChaced(string item, int index)
-        // {
-        //     SqlConnection cn = new SqlConnection(connectionString);
-        //     cn.Open();
-
-        //     SqlCommand cmd = new SqlCommand("INSERT INTO CachedWord (searchWord, anagramId) " + "VALUES ('" + item.Replace("'", "''") + "', '" + index + "')", cn);
-        //     cmd.CommandType = CommandType.Text;
-        //     cmd.ExecuteNonQuery();
-
-        //     cn.Close();
-        // }
-        public int CheckIfExistsInWords(string key, string connString)
+        public void AddToChaced(string searchWord, List<WordEntity> wordEntities, string connString)
         {
             using (var db = new AnagramContext(connString))
             {
-                var query = (from WordEntity in db.WordEntities where WordEntity.Word == key select WordEntity).Count();
-                return query;
+                var cachedWordEntity = new CachedWordEntity {
+                    SearchWord = searchWord,
+                };
+
+                foreach (var item in wordEntities)
+                {
+                    cachedWordEntity.WordEntities.Add(db.WordEntities.FirstOrDefault(m => m.WordId == item.WordId));
+                }
+
+                db.CachedWordEntities.Add(cachedWordEntity);
+                db.SaveChanges();
             }
         }
-
-        // public bool CheckIfExistsInCached(string key)
-        // {
-        //     SqlConnection cn = new SqlConnection(connectionString);
-        //     cn.Open();
-
-        //     SqlCommand checkWord = new SqlCommand("SELECT COUNT(*) FROM [CachedWord] WHERE ([searchWord] = @word)", cn);
-        //     checkWord.Parameters.AddWithValue("@word", key);
-        //     var result = (int)checkWord.ExecuteScalar();
-
-        //     cn.Close();
-
-        //     return result > 0;
-        // }
-        // public List<string> GetCachedWords(string key)
-        // {
-        //     SqlConnection cn = new SqlConnection(connectionString);
-            
-        //     cn.Open();
-
-        //     SqlCommand checkWord = new SqlCommand("SELECT word, searchWord FROM Word, CachedWord WHERE  Word.id = CachedWord.anagramId; ", cn);
-        //     SqlDataReader reader = checkWord.ExecuteReader();
-
-        //     var list = new List<string>();
-
-        //     while (reader.Read())
-        //     {
-        //         if(reader.GetString(1) == key) {
-        //             list.Add(reader.GetString(0));
-        //         }
-        //     }
-
-        //     cn.Close();
-
-        //     return list;
-        // }
+        public WordEntity CheckIfExistsInWords(string key, string connString)
+        {
+            using (var db = new AnagramContext(connString))
+            {
+                var query = db.WordEntities.Where(s => s.Word == key);
+                if(query.Count() <= 0 ) {
+                    return new WordEntity();
+                }
+                return query.First();
+            }
+        }
+        public List<string> GetCachedWords(string key, string connString)
+        {
+            var list = new List<string>();
+            using (var db = new AnagramContext(connString))
+            {
+                var what = db.CachedWordEntities.Include(r => r.WordEntities).Where(s => s.SearchWord == key);
+                if(what.Count() <= 0) {
+                    return list;
+                }
+                CachedWordEntity query = what.First();
+                foreach (var enrollment in query.WordEntities)
+                {
+                    Console.WriteLine("Enrollment ID: {0}, Course ID: {1}", enrollment.WordId, enrollment.Word);
+                }
+                list.Add(query.SearchWord);
+            }
+            return list;
+        }
         public Dictionary<string, DictionaryEntry> FilterWords(string key, string connString)
         {
             var dictionary = new Dictionary<string, DictionaryEntry>();
@@ -96,17 +88,15 @@ namespace AnagramSolver.DAL
             }
             return dictionary;
         }
-        // public void SaveUserLog(string ip, string item, List<string> anagrams)
-        // {
-        //     SqlConnection cn = new SqlConnection(connectionString);
-        //     cn.Open();
-        //     for(int i = 0; i < anagrams.Count; i++) {
-        //         SqlCommand cmd = new SqlCommand("INSERT INTO UserLog (userIp, searchTime, searchWord, anagram) " + "VALUES ('" +  ip + "', '" +  DateTime.UtcNow +  "', '" + item.Replace("'", "''") + "', '" + anagrams[i] + "')", cn);
-        //         cmd.CommandType = CommandType.Text;
-        //         cmd.ExecuteNonQuery();
-        //     }
-
-        //     cn.Close();
-        // }
+        public void SaveUserLog(string ip, string searchWord, string connString)
+        {
+            using (var db = new AnagramContext(connString))
+            {
+                var userLogEntity = new UserLogEntity { UserIP = ip, LogDate =  DateTime.UtcNow};
+                userLogEntity.CachedWordEntity = db.CachedWordEntities.First(s => s.SearchWord == searchWord);
+                db.UserLogEntities.Add(userLogEntity);
+                db.SaveChanges();
+            }
+        }
     }
 }

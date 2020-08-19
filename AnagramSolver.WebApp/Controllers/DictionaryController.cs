@@ -40,6 +40,7 @@ namespace AnagramSolver.WebApp.Controllers
 
             return items;
         }
+
         [HttpGet("filter/{word}")]
         public async Task<ActionResult<Dictionary<string, DictionaryEntry>>> GetFilteredWord(string word)
         {
@@ -53,6 +54,7 @@ namespace AnagramSolver.WebApp.Controllers
             
             return items;
         }
+
         [HttpGet("{index}")]
         public async Task<ActionResult<Dictionary<string, DictionaryEntry>>> Get(int index)
         {
@@ -71,6 +73,7 @@ namespace AnagramSolver.WebApp.Controllers
 
             return items;
         }
+        
         [HttpGet("download")]
         public async Task<IActionResult> Download()
         {

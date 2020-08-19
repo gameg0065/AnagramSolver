@@ -7,11 +7,12 @@ namespace AnagramSolver.Models
 {
     public class UserLogEntity
     {
+        
         [Key]
         [Index(IsUnique = true)]
-        public int Id { get; set; }
+        public int UserLogId { get; set; }
         public string UserIP { get; set; }
         public DateTime LogDate { get; set; }
-        public virtual ICollection<CachedWordEntity> CachedWordEntity { get; set; }
+        public virtual CachedWordEntity CachedWordEntity { get; set; }
     }
 }

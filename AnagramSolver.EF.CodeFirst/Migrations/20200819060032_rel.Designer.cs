@@ -4,14 +4,16 @@ using AnagramSolver.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnagramSolver.EF.CodeFirst.Migrations
 {
     [DbContext(typeof(AnagramContext))]
-    partial class AnagramContextModelSnapshot : ModelSnapshot
+    [Migration("20200819060032_rel")]
+    partial class rel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,11 +28,19 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<int>("ForeignID1")
+                        .HasColumnType("int");
+
                     b.Property<string>("SearchWord")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserLogEntityUserLogId")
+                        .HasColumnType("int");
+
                     b.HasKey("CachedWordId");
+
+                    b.HasIndex("UserLogEntityUserLogId");
 
                     b.ToTable("CachedWordEntities");
                 });
@@ -42,9 +52,6 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("CachedWordEntityCachedWordId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("LogDate")
                         .HasColumnType("datetime2");
 
@@ -52,8 +59,6 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserLogId");
-
-                    b.HasIndex("CachedWordEntityCachedWordId");
 
                     b.ToTable("UserLogEntities");
                 });
@@ -82,11 +87,11 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                     b.ToTable("WordEntities");
                 });
 
-            modelBuilder.Entity("AnagramSolver.Models.UserLogEntity", b =>
+            modelBuilder.Entity("AnagramSolver.Models.CachedWordEntity", b =>
                 {
-                    b.HasOne("AnagramSolver.Models.CachedWordEntity", "CachedWordEntity")
-                        .WithMany()
-                        .HasForeignKey("CachedWordEntityCachedWordId");
+                    b.HasOne("AnagramSolver.Models.UserLogEntity", null)
+                        .WithMany("CachedWordEntity")
+                        .HasForeignKey("UserLogEntityUserLogId");
                 });
 
             modelBuilder.Entity("AnagramSolver.Models.WordEntity", b =>

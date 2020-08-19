@@ -3,6 +3,7 @@ using AnagramSolver.Interfaces;
 using System.Linq;
 using System;
 using AnagramSolver.DAL;
+using AnagramSolver.Models;
 
 namespace AnagramSolver.BusinessLogic
 {
@@ -10,12 +11,12 @@ namespace AnagramSolver.BusinessLogic
     {
         public List<string> GenerateAnagrams(string word, int maxNumberOfAnagrams, string connString)
         {
-            var dataBase = new DataBase();
-            // if(dataBase.CheckIfExistsInCached(word)) {
-                
-            //     return dataBase.GetCachedWords(word);
-            // }
-
+            var codeFirstDataBase = new CodeFirstDataBase();
+            var returned = codeFirstDataBase.GetCachedWords(word, connString);
+            if(returned.Count > 0) {
+                Console.WriteLine("It works");
+                return returned;
+            }
             List<string> generatedAnagrams = new List<string>();
             List<string> returnList = new List<string>();
             for (int i = 0; i < word.Length; i++)
@@ -23,15 +24,15 @@ namespace AnagramSolver.BusinessLogic
                 var test = word.Where(val => val != word[i]).ToArray();
                 returnList = FindAllCombinations(test, word.ToCharArray(), word[i].ToString(), returnList);
             }
-
+            var entities = new List<WordEntity>(); 
             foreach (var item in returnList) {
-                var codeFirstDataBase = new CodeFirstDataBase();
-                var index  = codeFirstDataBase.CheckIfExistsInWords(item, connString);
-                if(index > 0 && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
-                    dataBase.AddToChaced(word, index);
+                var wordEntity = codeFirstDataBase.CheckIfExistsInWords(item, connString);
+                if(wordEntity.Word != null && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
                     generatedAnagrams.Add(item);
+                    entities.Add(wordEntity);
                 }
             }
+            codeFirstDataBase.AddToChaced(word, entities, connString);
             return generatedAnagrams;
         }
          public List<string> FindAllCombinations(char[] word, char[] originalWord, string answ, List<string> returnList) {
