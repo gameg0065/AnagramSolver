@@ -25,7 +25,7 @@ namespace AnagramSolver.Tests
         {
             var isExpectedOutput = false;
             dictionaryManager.LoadDictionary(dictionaryPath);
-            var result = anagramGenerator.GenerateAnagrams(input, 1);
+            // var result = anagramGenerator.GenerateAnagrams(input, 1);
             foreach (var item in result)
             {
                 if(item == expectedOutput) {

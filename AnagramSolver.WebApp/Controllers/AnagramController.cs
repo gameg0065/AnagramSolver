@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using AnagramSolver.BusinessLogic;
 using AnagramSolver.Contracts;
 using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+using AnagramSolver.DAL;
+using AnagramSolver.Models;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -31,16 +34,17 @@ namespace AnagramSolver.WebApp.Controllers
             if(numberOfAnagramsToGenerate == 0) {
                 numberOfAnagramsToGenerate = 1;
             }
+            
             var anagramGenerator = new AnagramGenerator();
-            var dataBase = new DataBase();
-            DataBase.connectionString = Configuration["ConnectionString"];
-            var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate);
-            dataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString() , id, items);    
+            var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate, Configuration["ConnectionString"]);
         
             if (items.Count < 1)
             {
                 return NotFound();
             }
+
+            var codeFirstDataBase = new CodeFirstDataBase();
+            codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
             
             return items;
         }
