@@ -35,6 +35,26 @@ namespace AnagramSolver.BusinessLogic
             codeFirstDataBase.AddToChaced(word, entities, connString);
             return generatedAnagrams;
         }
+        public List<string> GenerateAnagramsFromFile(string word, int maxNumberOfAnagrams)
+        {
+            List<string> generatedAnagrams = new List<string>();
+            List<string> returnList = new List<string>();
+            for (int i = 0; i < word.Length; i++)
+            {
+                var test = word.Where(val => val != word[i]).ToArray();
+                returnList = FindAllCombinations(test, word.ToCharArray(), word[i].ToString(), returnList);
+            }
+
+            foreach (var item in returnList) {
+                DictionaryManager theDictionaryManager = new DictionaryManager();
+                if (theDictionaryManager.CheckIfExists(item) && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item))
+                {
+                    generatedAnagrams.Add(item);
+                }
+            }
+            return generatedAnagrams;
+        }
+
          public List<string> FindAllCombinations(char[] word, char[] originalWord, string answ, List<string> returnList) {
             for (int i = 0; i < word.Length; i++)
             {

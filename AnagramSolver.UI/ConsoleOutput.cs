@@ -9,14 +9,20 @@ namespace AnagramSolver.UI
     {
         static FileStream fs;
         static StreamWriter sw;
-        public delegate void print(string s);
+        public delegate void PrintDelegate(string s);
         public static void WriteToScreen(string str)
         {
-            Console.WriteLine("The String is: {0}", str);
+            Console.WriteLine(str);
         }
         public static void WriteToDebug(string str)
         {
-            Debug.WriteLine("The String is: {0}", str);
+            Debug.WriteLine(str);
+        }
+        public static string CapitalizeFirstLetter(string input)
+        {
+            char[] letters = input.ToCharArray();
+            letters[0] = char.ToUpper(letters[0]);
+            return new string(letters);
         }
         public static void WriteToFile(string s)
         {
@@ -28,25 +34,28 @@ namespace AnagramSolver.UI
             sw.Close();
             fs.Close();
         }
-        public static void sendString(print ps)
+        public static void sendString(PrintDelegate ps, string message)
         {
-            ps("Hello World");
+            ps(message);
         }
         public void PrintGeneratedAnagrams(List<string> anagrams)
         {
-            print ps1 = new print(WriteToScreen);
-            print ps2 = new print(WriteToDebug);
-            print ps3 = new print(WriteToFile);
-            sendString(ps1);
-            sendString(ps2);
-            sendString(ps3);
+            // PrintDelegate ps2 = new PrintDelegate(WriteToDebug);
+            // PrintDelegate ps3 = new PrintDelegate(WriteToFile);
+            // PrintDelegate ps = new PrintDelegate(WriteToScreen);
+
             Console.WriteLine();
             Console.WriteLine("Generated anagrams: ");
             foreach (var item in anagrams)
             {
-                Console.WriteLine(item);
+                FormattedPrint(CapitalizeFirstLetter, item);
             }
             Console.WriteLine();
-        } 
+        }
+        public void FormattedPrint(Func<string, string> myMethodName, string input) {
+            string answ = myMethodName(input);
+            PrintDelegate ps = new PrintDelegate(WriteToScreen);
+            ps(answ);
+        }
     }
 }
