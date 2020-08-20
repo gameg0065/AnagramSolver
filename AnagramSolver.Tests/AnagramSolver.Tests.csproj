@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AnagramSolver\AnagramSolver.csproj" />
+    <ProjectReference Include="../AnagramSolver.Generics/AnagramSolver.Generics.csproj" />
   </ItemGroup>
 
 </Project>

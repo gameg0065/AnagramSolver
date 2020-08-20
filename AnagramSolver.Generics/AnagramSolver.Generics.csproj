@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AnagramSolver.Contracts/AnagramSolver.Contracts.csproj" />
+    <ProjectReference Include="../AnagramSolver.Interfaces/AnagramSolver.Interfaces.csproj" />
+    <ProjectReference Include="../AnagramSolver.EF.CodeFirst/AnagramSolver.EF.CodeFirst.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="Invisionware.Settings.Sinks.SystemAppConfig" Version="1.1.10" />
+   </ItemGroup>
+
+</Project>

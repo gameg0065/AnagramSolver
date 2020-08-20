@@ -1,7 +1,7 @@
 ﻿using System;
 using AnagramSolver.Interfaces;
 using AnagramSolver.BusinessLogic;
-
+using System.Collections.Generic;
 namespace AnagramSolver.UI
 {
     public class GetUserInput: IUserInteraction
@@ -16,8 +16,8 @@ namespace AnagramSolver.UI
             {
                 string word = GetWord(minLength);
                 AnagramGenerator myAnagramGenerator = new AnagramGenerator();
-                Output theOutput = new Output();
-                // theOutput.PrintGeneratedAnagrams(myAnagramGenerator.GenerateAnagrams(word, anagramNumber));
+                var display = new Display();
+                display.PrintGeneratedAnagrams(myAnagramGenerator.GenerateAnagramsFromFile(word, anagramNumber));
                 endApp = AskToEndApp();
             }      
         }
