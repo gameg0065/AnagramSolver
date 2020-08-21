@@ -11,6 +11,8 @@ using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using AnagramSolver.DAL;
 using AnagramSolver.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -21,6 +23,7 @@ namespace AnagramSolver.WebApp.Controllers
 
         private readonly ILogger<AnagramController> _logger;
         private readonly IConfiguration Configuration;
+        static readonly HttpClient client = new HttpClient();
 
         public AnagramController(ILogger<AnagramController> logger, IConfiguration configuration)
         {
@@ -46,6 +49,30 @@ namespace AnagramSolver.WebApp.Controllers
             var codeFirstDataBase = new CodeFirstDataBase();
             codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
             
+            return items;
+        }
+
+        [HttpGet("anagramica/{id}")]
+        public async Task<ActionResult<List<string>>> GetAnagramsFromAnagramica(string id)
+        {
+            var items = new List<string>();
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync("http://www.anagramica.com/all/" + id);
+                response.EnsureSuccessStatusCode();
+                var jsonString = await response.Content.ReadAsStringAsync();
+                items = JsonConvert.DeserializeObject<RootJsonObject>(jsonString).All;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+            if (items.Count < 1)
+            {
+                return NotFound();
+            }
+
             return items;
         }
     }
