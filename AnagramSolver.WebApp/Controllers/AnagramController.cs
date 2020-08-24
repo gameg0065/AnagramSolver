@@ -11,6 +11,9 @@ using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using AnagramSolver.DAL;
 using AnagramSolver.Models;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace AnagramSolver.WebApp.Controllers
 {
@@ -21,6 +24,7 @@ namespace AnagramSolver.WebApp.Controllers
 
         private readonly ILogger<AnagramController> _logger;
         private readonly IConfiguration Configuration;
+        static readonly HttpClient client = new HttpClient();
 
         public AnagramController(ILogger<AnagramController> logger, IConfiguration configuration)
         {
@@ -46,6 +50,33 @@ namespace AnagramSolver.WebApp.Controllers
             var codeFirstDataBase = new CodeFirstDataBase();
             codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
             
+            return items;
+        }
+
+        [HttpGet("anagramica/{id}")]
+        public async Task<ActionResult<List<string>>> GetAnagramsFromAnagramica(string id)
+        {
+            const string URL = "http://www.anagramica.com/all/";
+            var items = new List<string>();
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(URL);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync(id).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                // Parse the response body.
+                var jsonString = await response.Content.ReadAsStringAsync();
+                items = JsonConvert.DeserializeObject<RootJsonObject>(jsonString).All;
+            }
+            else
+            {
+                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+            }
+            if (items.Count < 1)
+            {
+                return NotFound();
+            }
+
             return items;
         }
     }

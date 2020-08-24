@@ -17,6 +17,8 @@ WebApp:
     /api/dictionary/{index}
     /api/dictionary/download
     /api/anagram/{word}
+    // using Anagramica api
+    /api/anagram/anagramica/{word}
 ```
 
 
