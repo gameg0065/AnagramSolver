@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using AnagramSolver.DAL;
 using AnagramSolver.Models;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace AnagramSolver.WebApp.Controllers
@@ -55,18 +56,21 @@ namespace AnagramSolver.WebApp.Controllers
         [HttpGet("anagramica/{id}")]
         public async Task<ActionResult<List<string>>> GetAnagramsFromAnagramica(string id)
         {
+            const string URL = "http://www.anagramica.com/all/";
             var items = new List<string>();
-            try
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(URL);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync(id).Result;
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync("http://www.anagramica.com/all/" + id);
-                response.EnsureSuccessStatusCode();
+                // Parse the response body.
                 var jsonString = await response.Content.ReadAsStringAsync();
                 items = JsonConvert.DeserializeObject<RootJsonObject>(jsonString).All;
             }
-            catch (HttpRequestException e)
+            else
             {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
+                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
             }
             if (items.Count < 1)
             {
