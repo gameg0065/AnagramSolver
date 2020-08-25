@@ -33,21 +33,6 @@ namespace AnagramSolver.BusinessLogic
             await codeFirstDataBase.AddToChaced(word, entities, connString);
             return generatedAnagrams;
         }
-        public async Task<List<string>> GenerateAnagramsFromFile(string word, int maxNumberOfAnagrams)
-        {
-            List<string> generatedAnagrams = new List<string>();
-
-            foreach (var item in await FindAllCombinations(word))
-            {
-                DictionaryManager theDictionaryManager = new DictionaryManager();
-                if (theDictionaryManager.CheckIfExists(item) && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item))
-                {
-                    generatedAnagrams.Add(item);
-                }
-            }
-            return generatedAnagrams;
-        }
-
         private async Task<List<string>> FindAllCombinations(string word)
         {
             var returnList = new List<string>();
@@ -58,7 +43,6 @@ namespace AnagramSolver.BusinessLogic
             }
             return returnList;
         }
-
         private async Task<List<string>> FindCombinatorially(char[] word, int wordLength, string answ)
         {
             var list = new List<string>();

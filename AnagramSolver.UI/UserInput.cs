@@ -17,7 +17,7 @@ namespace AnagramSolver.UI
                 string word = GetWord(minLength);
                 var myAnagramGenerator = new AnagramGenerator();
                 var display = new Display();
-                display.PrintGeneratedAnagrams(myAnagramGenerator.GenerateAnagramsFromFile(word, anagramNumber));
+                // display.PrintGeneratedAnagrams();
                 endApp = AskToEndApp();
             }      
         }

@@ -48,7 +48,7 @@ namespace AnagramSolver.WebApp.Controllers
             }
 
             var codeFirstDataBase = new CodeFirstDataBase();
-            codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
+            await codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
             
             return items;
         }

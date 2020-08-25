@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data.SqlClient;
 using System.Data;
 using AnagramSolver.Contracts;
 using AnagramSolver.Models;
@@ -67,13 +66,13 @@ namespace AnagramSolver.DAL
             }
             return list;
         }
-        public Dictionary<string, DictionaryEntry> FilterWords(string key, string connString)
+        public async Task<Dictionary<string, DictionaryEntry>> FilterWords(string key, string connString)
         {
             var dictionary = new Dictionary<string, DictionaryEntry>();
         
             using (var db = new AnagramContext(connString))
             {
-                var query = from WordEntity in db.WordEntities where WordEntity.Word.StartsWith(key) select WordEntity;
+                var query = await db.WordEntities.Where(s => s.Word.StartsWith(key)).ToListAsync();
                 foreach (var item in query)
                 {
                     DictionaryEntry theElement = new DictionaryEntry();
@@ -84,14 +83,31 @@ namespace AnagramSolver.DAL
             }
             return dictionary;
         }
-        public void SaveUserLog(string ip, string searchWord, string connString)
+        public async Task<Dictionary<string, DictionaryEntry>> GetWords(int key, int numberOfItemsToReturn, string connString)
+        {
+            var dictionary = new Dictionary<string, DictionaryEntry>();
+
+            using (var db = new AnagramContext(connString))
+            {
+                var query = await db.WordEntities.Skip(numberOfItemsToReturn * (key - 1)).Take(numberOfItemsToReturn * key).ToListAsync();
+                foreach (var item in query)
+                {
+                    DictionaryEntry theElement = new DictionaryEntry();
+                    theElement.Word = item.Word;
+                    theElement.Antecedent = item.Category;
+                    dictionary.Add(key: item.Word, value: theElement);
+                }
+            }
+            return dictionary;
+        }
+        public async Task SaveUserLog(string ip, string searchWord, string connString)
         {
             using (var db = new AnagramContext(connString))
             {
                 var userLogEntity = new UserLogEntity { UserIP = ip, LogDate =  DateTime.UtcNow};
                 userLogEntity.CachedWordEntity = db.CachedWordEntities.First(s => s.SearchWord == searchWord);
                 db.UserLogEntities.Add(userLogEntity);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
         }
     }

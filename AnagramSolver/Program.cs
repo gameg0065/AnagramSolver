@@ -10,14 +10,7 @@ namespace AnagramSolver
     class Program
     {
         static void Main(string[] args) {
-            var myDictionaryManager = new DictionaryManager();
-            myDictionaryManager.LoadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]);
-            var test = new AnagramGenerator();
-            var temp = test.GenerateAnagramsFromFile("alus", 3);
-            foreach(var huh in temp) {
-                Console.WriteLine(huh);
-            }
-            // StartApp();
+            StartApp();
         }
 
         private static void StartApp() {
