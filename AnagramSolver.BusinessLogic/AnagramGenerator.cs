@@ -22,7 +22,7 @@ namespace AnagramSolver.BusinessLogic
             for (int i = 0; i < word.Length; i++)
             {
                 var test = word.Where(val => val != word[i]).ToArray();
-                returnList = FindAllCombinations(test, word.ToCharArray(), word[i].ToString(), returnList);
+                returnList = FindAllCombinations(test, word.Length, word[i].ToString(), returnList);
             }
             var entities = new List<WordEntity>(); 
             foreach (var item in returnList) {
@@ -42,7 +42,7 @@ namespace AnagramSolver.BusinessLogic
             for (int i = 0; i < word.Length; i++)
             {
                 var test = word.Where(val => val != word[i]).ToArray();
-                returnList = FindAllCombinations(test, word.ToCharArray(), word[i].ToString(), returnList);
+                returnList = FindAllCombinations(test, word.Length, word[i].ToString(), returnList);
             }
 
             foreach (var item in returnList) {
@@ -55,12 +55,12 @@ namespace AnagramSolver.BusinessLogic
             return generatedAnagrams;
         }
 
-         public List<string> FindAllCombinations(char[] word, char[] originalWord, string answ, List<string> returnList) {
+         public List<string> FindAllCombinations(char[] word, int wordLength, string answ, List<string> returnList) {
             for (int i = 0; i < word.Length; i++)
             {
                 answ += word[i];
-                FindAllCombinations(word.Where((val, idx) => idx != Array.IndexOf(word, word[i])).ToArray(), originalWord, answ, returnList);
-                if(originalWord.Length == answ.Length) {
+                FindAllCombinations(word.Where((val, idx) => idx != Array.IndexOf(word, word[i])).ToArray(), wordLength, answ, returnList);
+                if(wordLength == answ.Length) {
                     returnList.Add(answ);
                 }
                 answ = answ.Remove(answ.Length - 1);
