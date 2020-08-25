@@ -17,19 +17,37 @@ namespace AnagramSolver.BusinessLogic
             {
                 return returned;
             }
-            List<string> generatedAnagrams = new List<string>();
-            var returnList = await FindAllCombinations(word);
-        
+
+            var generatedAnagrams = new List<string>();
             var entities = new List<WordEntity>();
-            foreach (var item in returnList)
+            if (word.Length < 6)
             {
-                var wordEntity = await Task.Run(() => codeFirstDataBase.CheckIfExistsInWords(item, connString));
-                if (wordEntity.Word != null && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item))
+                var returnList = await FindAllCombinations(word);
+
+                foreach (var item in returnList)
                 {
-                    generatedAnagrams.Add(item);
-                    entities.Add(wordEntity);
+                    var wordEntity = await Task.Run(() => codeFirstDataBase.CheckIfExistsInWords(item, connString));
+                    if (wordEntity.Word != null && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item))
+                    {
+                        generatedAnagrams.Add(item);
+                        entities.Add(wordEntity);
+                    }
                 }
             }
+            else
+            {
+                var orderedWord = word.ToCharArray();
+                Array.Sort(orderedWord);
+                var wordEntities = await Task.Run(() => codeFirstDataBase.CheckIfExistsInOrderedWords(new string(orderedWord), connString));
+                foreach(var wordEntity in wordEntities) {
+                    if ( wordEntity.Word != word && generatedAnagrams.Count < maxNumberOfAnagrams)
+                    {
+                        generatedAnagrams.Add(wordEntity.Word);
+                        entities.Add(wordEntity);
+                    }
+                }
+            }
+            
             await codeFirstDataBase.AddToChaced(word, entities, connString);
             return generatedAnagrams;
         }

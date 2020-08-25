@@ -47,12 +47,14 @@ namespace AnagramSolver.BusinessLogic
 
         public void AddToDictionary(Dictionary<string, DictionaryEntry> elements, string word, string antecedent)
         {
-            DictionaryEntry theElement = new DictionaryEntry();
+            var element = new DictionaryEntry();
+            var orderedWord = word.ToCharArray();
+            Array.Sort(orderedWord);
 
-            theElement.Word = word;
-            theElement.Antecedent = antecedent;
+            element.Word = new string(orderedWord);
+            element.Antecedent = antecedent;
 
-            elements.Add(key: theElement.Word, value: theElement);
+            elements.Add(key: word, value: element);
         }
     }
 }

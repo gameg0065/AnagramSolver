@@ -11,17 +11,17 @@ namespace AnagramSolver.DAL
 {
     public class CodeFirstDataBase
     {
-        public async Task AddFromFile(Dictionary<string, DictionaryEntry> dictionary, string connString)
+        public void AddFromFile(Dictionary<string, DictionaryEntry> dictionary, string connString)
         {
             using (var db = new AnagramContext(connString))
             {
                 for (int i = 0; i < dictionary.Count; i++)
                 {
                     var item = dictionary.ElementAt(i);
-                    var word = new WordEntity { Word = item.Key, Category = item.Value.Antecedent };
+                    var word = new WordEntity { Word = item.Key, OrderedWord = item.Value.Word, Category = item.Value.Antecedent };
                     db.WordEntities.Add(word);
                 }
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
         }
 
@@ -53,16 +53,33 @@ namespace AnagramSolver.DAL
                 return query.First();
             }
         }
+        public async Task<List<WordEntity>> CheckIfExistsInOrderedWords(string key, string connString)
+        {
+            using (var db = new AnagramContext(connString))
+            {
+                var query = await db.WordEntities.Where(s => s.OrderedWord == key).ToListAsync();
+                if (query.Count() <= 0)
+                {
+                    return new List<WordEntity>();
+                }
+                return query;
+            }
+        }
         public async Task<List<string>> GetCachedWords(string key, string connString)
         {
             var list = new List<string>();
             using (var db = new AnagramContext(connString))
             {
-                var result = await db.CachedWordEntities.Where(s => s.SearchWord == key).ToListAsync();
+                var result = await db.CachedWordEntities.Include(r => r.WordEntities).Where(s => s.SearchWord == key).ToListAsync();
                 if(result.Count() <= 0) {
                     return list;
                 }
-                list.Add(result.First().SearchWord);
+                foreach (var wordEntity in result.Last().WordEntities)
+                {
+                    if(key != wordEntity.Word) {
+                        list.Add(wordEntity.Word);
+                    }
+                }
             }
             return list;
         }
@@ -75,10 +92,10 @@ namespace AnagramSolver.DAL
                 var query = await db.WordEntities.Where(s => s.Word.StartsWith(key)).ToListAsync();
                 foreach (var item in query)
                 {
-                    DictionaryEntry theElement = new DictionaryEntry();
-                    theElement.Word = item.Word;
-                    theElement.Antecedent = item.Category;
-                    dictionary.Add(key: item.Word, value: theElement);
+                    var element = new DictionaryEntry();
+                    element.Word = item.OrderedWord;
+                    element.Antecedent = item.Category;
+                    dictionary.Add(key: item.Word, value: element);
                 }
             }
             return dictionary;
@@ -92,10 +109,10 @@ namespace AnagramSolver.DAL
                 var query = await db.WordEntities.Skip(numberOfItemsToReturn * (key - 1)).Take(numberOfItemsToReturn * key).ToListAsync();
                 foreach (var item in query)
                 {
-                    DictionaryEntry theElement = new DictionaryEntry();
-                    theElement.Word = item.Word;
-                    theElement.Antecedent = item.Category;
-                    dictionary.Add(key: item.Word, value: theElement);
+                    var element = new DictionaryEntry();
+                    element.Word = item.OrderedWord;
+                    element.Antecedent = item.Category;
+                    dictionary.Add(key: item.Word, value: element);
                 }
             }
             return dictionary;

@@ -71,6 +71,9 @@ namespace AnagramSolver.EF.CodeFirst.Migrations
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OrderedWord")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Word")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
