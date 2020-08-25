@@ -1,51 +1,44 @@
 ﻿using System.Collections.Generic;
-using AnagramSolver.Interfaces;
 using System.Linq;
 using System;
 using AnagramSolver.DAL;
 using AnagramSolver.Models;
+using System.Threading.Tasks;
 
 namespace AnagramSolver.BusinessLogic
 {
     public class AnagramGenerator
     {
-        public List<string> GenerateAnagrams(string word, int maxNumberOfAnagrams, string connString)
+        public async Task<List<string>> GenerateAnagrams(string word, int maxNumberOfAnagrams, string connString)
         {
             var codeFirstDataBase = new CodeFirstDataBase();
-            var returned = codeFirstDataBase.GetCachedWords(word, connString);
-            if(returned.Count > 0) {
-                Console.WriteLine("It works");
+            var returned = await codeFirstDataBase.GetCachedWords(word, connString);
+            if (returned.Count > 0)
+            {
                 return returned;
             }
             List<string> generatedAnagrams = new List<string>();
-            List<string> returnList = new List<string>();
-            for (int i = 0; i < word.Length; i++)
+            var returnList = await FindAllCombinations(word);
+        
+            var entities = new List<WordEntity>();
+            foreach (var item in returnList)
             {
-                var test = word.Where(val => val != word[i]).ToArray();
-                returnList = FindAllCombinations(test, word.Length, word[i].ToString(), returnList);
-            }
-            var entities = new List<WordEntity>(); 
-            foreach (var item in returnList) {
-                var wordEntity = codeFirstDataBase.CheckIfExistsInWords(item, connString);
-                if(wordEntity.Word != null && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item)) {
+                var wordEntity = await Task.Run(() => codeFirstDataBase.CheckIfExistsInWords(item, connString));
+                if (wordEntity.Word != null && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item))
+                {
                     generatedAnagrams.Add(item);
                     entities.Add(wordEntity);
                 }
             }
-            codeFirstDataBase.AddToChaced(word, entities, connString);
+            await codeFirstDataBase.AddToChaced(word, entities, connString);
             return generatedAnagrams;
         }
-        public List<string> GenerateAnagramsFromFile(string word, int maxNumberOfAnagrams)
+        public async Task<List<string>> GenerateAnagramsFromFile(string word, int maxNumberOfAnagrams)
         {
             List<string> generatedAnagrams = new List<string>();
-            List<string> returnList = new List<string>();
-            for (int i = 0; i < word.Length; i++)
-            {
-                var test = word.Where(val => val != word[i]).ToArray();
-                returnList = FindAllCombinations(test, word.Length, word[i].ToString(), returnList);
-            }
 
-            foreach (var item in returnList) {
+            foreach (var item in await FindAllCombinations(word))
+            {
                 DictionaryManager theDictionaryManager = new DictionaryManager();
                 if (theDictionaryManager.CheckIfExists(item) && item != word && generatedAnagrams.Count < maxNumberOfAnagrams && !generatedAnagrams.Any(listItem => listItem == item))
                 {
@@ -55,17 +48,32 @@ namespace AnagramSolver.BusinessLogic
             return generatedAnagrams;
         }
 
-         public List<string> FindAllCombinations(char[] word, int wordLength, string answ, List<string> returnList) {
+        private async Task<List<string>> FindAllCombinations(string word)
+        {
+            var returnList = new List<string>();
+            for (int i = 0; i < word.Length; i++)
+            {
+                var test = word.Where(val => val != word[i]).ToArray();
+                returnList.AddRange(await Task.Run(() => FindCombinatorially(test, word.Length, word[i].ToString())));
+            }
+            return returnList;
+        }
+
+        private async Task<List<string>> FindCombinatorially(char[] word, int wordLength, string answ)
+        {
+            var list = new List<string>();
             for (int i = 0; i < word.Length; i++)
             {
                 answ += word[i];
-                FindAllCombinations(word.Where((val, idx) => idx != Array.IndexOf(word, word[i])).ToArray(), wordLength, answ, returnList);
-                if(wordLength == answ.Length) {
-                    returnList.Add(answ);
+                var items = Task.Run(() => FindCombinatorially(word.Where((val, idx) => idx != Array.IndexOf(word, word[i])).ToArray(), wordLength, answ));
+                list.AddRange(await items);
+                if (wordLength == answ.Length)
+                {
+                    list.Add(answ);
                 }
                 answ = answ.Remove(answ.Length - 1);
             }
-            return returnList;
+            return list;
         }
     }
 }

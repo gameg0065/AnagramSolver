@@ -40,7 +40,7 @@ namespace AnagramSolver.WebApp.Controllers
             }
             
             var anagramGenerator = new AnagramGenerator();
-            var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate, Configuration["ConnectionString"]);
+            var items = await anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate, Configuration["ConnectionString"]);
         
             if (items.Count < 1)
             {
