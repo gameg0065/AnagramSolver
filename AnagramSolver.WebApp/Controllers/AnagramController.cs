@@ -40,7 +40,7 @@ namespace AnagramSolver.WebApp.Controllers
             }
             
             var anagramGenerator = new AnagramGenerator();
-            var items = anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate, Configuration["ConnectionString"]);
+            var items = await anagramGenerator.GenerateAnagrams(id, numberOfAnagramsToGenerate, Configuration["ConnectionString"]);
         
             if (items.Count < 1)
             {
@@ -48,7 +48,7 @@ namespace AnagramSolver.WebApp.Controllers
             }
 
             var codeFirstDataBase = new CodeFirstDataBase();
-            codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
+            await codeFirstDataBase.SaveUserLog( HttpContext.Connection.RemoteIpAddress.ToString(), id, Configuration["ConnectionString"]);    
             
             return items;
         }

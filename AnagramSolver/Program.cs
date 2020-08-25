@@ -4,13 +4,17 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using AnagramSolver.BusinessLogic;
 using AnagramSolver.UI;
+using AnagramSolver.DAL;
 
 namespace AnagramSolver
 {
     class Program
     {
         static void Main(string[] args) {
-            StartApp();
+            var codeFirstDataBase = new CodeFirstDataBase();
+            var myDictionaryManager = new DictionaryManager();
+            codeFirstDataBase.AddFromFile(myDictionaryManager.LoadDictionary(ConfigurationManager.AppSettings["DictionaryPath"]), "Server=localhost;Database=anagramsolver; User Id = sa; Password = LAMA55lama;");
+            // StartApp();
         }
 
         private static void StartApp() {

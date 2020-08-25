@@ -11,6 +11,7 @@ namespace AnagramSolver.Models
         [Required]
         [Index(IsUnique = true)]
         public string Word { get; set; }
+        public string OrderedWord { get; set; }
         public string Category { get; set; }
         public virtual CachedWordEntity CachedWordEntity { get; set; }
     }

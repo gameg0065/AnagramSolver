@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data.SqlClient;
 using System.Data;
 using AnagramSolver.Contracts;
 using AnagramSolver.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace AnagramSolver.DAL
 {
@@ -18,14 +18,14 @@ namespace AnagramSolver.DAL
                 for (int i = 0; i < dictionary.Count; i++)
                 {
                     var item = dictionary.ElementAt(i);
-                    var word = new WordEntity { Word = item.Key, Category = item.Value.Antecedent };
+                    var word = new WordEntity { Word = item.Key, OrderedWord = item.Value.Word, Category = item.Value.Antecedent };
                     db.WordEntities.Add(word);
                 }
                 db.SaveChanges();
             }
         }
 
-        public void AddToChaced(string searchWord, List<WordEntity> wordEntities, string connString)
+        public async Task AddToChaced(string searchWord, List<WordEntity> wordEntities, string connString)
         {
             using (var db = new AnagramContext(connString))
             {
@@ -39,63 +39,92 @@ namespace AnagramSolver.DAL
                 }
 
                 db.CachedWordEntities.Add(cachedWordEntity);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
         }
-        public WordEntity CheckIfExistsInWords(string key, string connString)
+        public async Task<WordEntity> CheckIfExistsInWords(string key, string connString)
         {
             using (var db = new AnagramContext(connString))
             {
-                var query = db.WordEntities.Where(s => s.Word == key);
+                var query = await db.WordEntities.Where(s => s.Word == key).ToListAsync();
                 if(query.Count() <= 0 ) {
                     return new WordEntity();
                 }
                 return query.First();
             }
         }
-        public List<string> GetCachedWords(string key, string connString)
+        public async Task<List<WordEntity>> CheckIfExistsInOrderedWords(string key, string connString)
+        {
+            using (var db = new AnagramContext(connString))
+            {
+                var query = await db.WordEntities.Where(s => s.OrderedWord == key).ToListAsync();
+                if (query.Count() <= 0)
+                {
+                    return new List<WordEntity>();
+                }
+                return query;
+            }
+        }
+        public async Task<List<string>> GetCachedWords(string key, string connString)
         {
             var list = new List<string>();
             using (var db = new AnagramContext(connString))
             {
-                var what = db.CachedWordEntities.Include(r => r.WordEntities).Where(s => s.SearchWord == key);
-                if(what.Count() <= 0) {
+                var result = await db.CachedWordEntities.Include(r => r.WordEntities).Where(s => s.SearchWord == key).ToListAsync();
+                if(result.Count() <= 0) {
                     return list;
                 }
-                CachedWordEntity query = what.First();
-                foreach (var enrollment in query.WordEntities)
+                foreach (var wordEntity in result.Last().WordEntities)
                 {
-                    Console.WriteLine("Enrollment ID: {0}, Course ID: {1}", enrollment.WordId, enrollment.Word);
+                    if(key != wordEntity.Word) {
+                        list.Add(wordEntity.Word);
+                    }
                 }
-                list.Add(query.SearchWord);
             }
             return list;
         }
-        public Dictionary<string, DictionaryEntry> FilterWords(string key, string connString)
+        public async Task<Dictionary<string, DictionaryEntry>> FilterWords(string key, string connString)
         {
             var dictionary = new Dictionary<string, DictionaryEntry>();
         
             using (var db = new AnagramContext(connString))
             {
-                var query = from WordEntity in db.WordEntities where WordEntity.Word.StartsWith(key) select WordEntity;
+                var query = await db.WordEntities.Where(s => s.Word.StartsWith(key)).ToListAsync();
                 foreach (var item in query)
                 {
-                    DictionaryEntry theElement = new DictionaryEntry();
-                    theElement.Word = item.Word;
-                    theElement.Antecedent = item.Category;
-                    dictionary.Add(key: item.Word, value: theElement);
+                    var element = new DictionaryEntry();
+                    element.Word = item.OrderedWord;
+                    element.Antecedent = item.Category;
+                    dictionary.Add(key: item.Word, value: element);
                 }
             }
             return dictionary;
         }
-        public void SaveUserLog(string ip, string searchWord, string connString)
+        public async Task<Dictionary<string, DictionaryEntry>> GetWords(int key, int numberOfItemsToReturn, string connString)
+        {
+            var dictionary = new Dictionary<string, DictionaryEntry>();
+
+            using (var db = new AnagramContext(connString))
+            {
+                var query = await db.WordEntities.Skip(numberOfItemsToReturn * (key - 1)).Take(numberOfItemsToReturn * key).ToListAsync();
+                foreach (var item in query)
+                {
+                    var element = new DictionaryEntry();
+                    element.Word = item.OrderedWord;
+                    element.Antecedent = item.Category;
+                    dictionary.Add(key: item.Word, value: element);
+                }
+            }
+            return dictionary;
+        }
+        public async Task SaveUserLog(string ip, string searchWord, string connString)
         {
             using (var db = new AnagramContext(connString))
             {
                 var userLogEntity = new UserLogEntity { UserIP = ip, LogDate =  DateTime.UtcNow};
                 userLogEntity.CachedWordEntity = db.CachedWordEntities.First(s => s.SearchWord == searchWord);
                 db.UserLogEntities.Add(userLogEntity);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
         }
     }
